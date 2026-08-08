@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Box de Mods — Assetto Corsa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#121319;
+    --bg-panel:#1B1D25;
+    --bg-panel-2:#22242E;
+    --ink:#ECEBE4;
+    --ink-dim:#9498A6;
+    --ink-faint:#565A66;
+    --amber:#F2A93B;
+    --amber-dim:#8a6423;
+    --green:#2E6E52;
+    --red:#C1443C;
+    --line:#2C2F3A;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--amber);color:#14151A;}
+
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    font-size:.72rem;
+    color:var(--amber);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:5.5rem 1.5rem 4rem;
+    text-align:center;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(242,169,59,.10), transparent 60%),
+      var(--bg);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 120px);
+    opacity:.35;
+    pointer-events:none;
+  }
+  .hero-inner{position:relative;max-width:760px;margin:0 auto;}
+  .hero h1{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(3rem,9vw,6rem);
+    letter-spacing:.03em;
+    line-height:.95;
+    margin:.6rem 0 1rem;
+  }
+  .hero h1 span{color:var(--amber);}
+  .hero p.sub{
+    color:var(--ink-dim);
+    font-size:1.05rem;
+    max-width:520px;
+    margin:0 auto 2.4rem;
+  }
+  .stat-row{
+    display:flex;
+    justify-content:center;
+    gap:2.2rem;
+    flex-wrap:wrap;
+  }
+  .stat{font-family:'Space Mono',monospace;}
+  .stat b{
+    display:block;
+    font-family:'Bebas Neue',sans-serif;
+    font-size:2.3rem;
+    color:var(--ink);
+    letter-spacing:.02em;
+  }
+  .stat span{font-size:.68rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.1em;}
+
+  /* ---------- CHECKERED DIVIDER ---------- */
+  .checker{
+    height:14px;
+    background-image:
+      repeating-conic-gradient(#0e0f13 0% 25%, #d9d6c9 0% 50%);
+    background-size:14px 14px;
+    opacity:.85;
+  }
+
+  /* ---------- NAV ---------- */
+  .pit-nav{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(18,19,25,.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+    white-space:nowrap;
+    padding:.7rem 1rem;
+    scrollbar-width:thin;
+  }
+  .pit-nav::-webkit-scrollbar{height:5px;}
+  .pit-nav::-webkit-scrollbar-thumb{background:var(--line);}
+  .pit-nav a{
+    display:inline-block;
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink-dim);
+    text-decoration:none;
+    padding:.4rem .75rem;
+    border:1px solid var(--line);
+    border-radius:3px;
+    margin-right:.5rem;
+    transition:.15s;
+  }
+  .pit-nav a:hover, .pit-nav a.active{
+    color:var(--bg);
+    background:var(--amber);
+    border-color:var(--amber);
+  }
+
+  /* ---------- MAIN / SECTIONS ---------- */
+  main{max-width:1080px;margin:0 auto;padding:0 1.5rem;}
+  .lead{
+    max-width:640px;
+    margin:3rem auto 0;
+    text-align:center;
+    color:var(--ink-dim);
+    font-size:.95rem;
+  }
+  section.category{
+    padding:3.4rem 0 1rem;
+    scroll-margin-top:4.2rem;
+    border-bottom:1px solid var(--line);
+  }
+  .cat-head{margin-bottom:1.6rem;}
+  .cat-head .box-num{
+    font-family:'Space Mono',monospace;
+    color:var(--ink-faint);
+    font-size:.75rem;
+  }
+  .cat-head h2{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:2.1rem;
+    letter-spacing:.02em;
+    margin:.15rem 0 .35rem;
+  }
+  .cat-head p{
+    color:var(--ink-dim);
+    font-size:.92rem;
+    margin:0;
+    max-width:52ch;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .card{
+    background:var(--bg-panel);
+    padding:1.1rem 1.1rem 1rem;
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+    min-height:118px;
+    transition:background .15s;
+  }
+  .card:hover{background:var(--bg-panel-2);}
+  .card .icon{
+    width:22px;height:22px;
+    color:var(--amber);
+    opacity:.9;
+  }
+  .card h3{
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:.98rem;
+    margin:0;
+  }
+  .card .note{
+    color:var(--ink-dim);
+    font-size:.82rem;
+    line-height:1.45;
+    flex-grow:1;
+  }
+  .card .go{
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;
+    text-decoration:none;
+    color:var(--amber);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    align-self:flex-start;
+    border-bottom:1px solid transparent;
+  }
+  .card .go:hover{border-bottom-color:var(--amber);}
+  .card.disabled{opacity:.45;}
+  .card.disabled h3{text-decoration:line-through;}
+
+  .card.group-tag{
+    grid-column:1 / -1;
+    background:var(--bg-panel-2);
+    flex-direction:row;
+    align-items:baseline;
+    gap:.6rem;
+    min-height:auto;
+    padding:.6rem 1.1rem;
+  }
+  .card.group-tag h3{font-size:.78rem;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;}
+  .card.group-tag .note{font-size:.78rem;}
+
+  /* ---------- HAZARD FOOTER ---------- */
+  .hazard{
+    height:10px;
+    background:repeating-linear-gradient(135deg, var(--amber) 0 14px, #14151A 14px 28px);
+  }
+  footer{
+    background:var(--bg-panel);
+    padding:2.6rem 1.5rem 3rem;
+  }
+  .footer-inner{max-width:760px;margin:0 auto;}
+  footer h4{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    font-size:.78rem;
+    color:var(--red);
+    margin:0 0 .6rem;
+  }
+  footer p{color:var(--ink-dim);font-size:.9rem;margin:0 0 1rem;}
+  footer .credit{
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;
+    color:var(--ink-faint);
+    margin-top:2rem;
+    padding-top:1.4rem;
+    border-top:1px solid var(--line);
+  }
+
+  @media (max-width:560px){
+    .hero{padding:4rem 1.2rem 2.6rem;}
+    .stat-row{gap:1.4rem;}
+    .stat b{font-size:1.8rem;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Paddock no oficial · sin monetizar</div>
+    <h1>BOX DE <span>MODS</span></h1>
+    <p class="sub">Catálogo de mods gratis para Assetto Corsa, armado categoría por categoría con link directo a cada uno. Probado antes de entrar a la lista.</p>
+    <div class="stat-row">
+      <div class="stat"><b>85+</b><span>mods y pistas</span></div>
+      <div class="stat"><b>21</b><span>categorías</span></div>
+      <div class="stat"><b>$0</b><span>en casi todo</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="checker"></div>
+
+<nav class="pit-nav" id="pitNav">
+  <a href="#resistencia">01 Resistencia</a>
+  <a href="#gt">02 GT3/GT4/GT2</a>
+  <a href="#formulas">03 Fórmulas</a>
+  <a href="#turismos">04 Turismos/Rally</a>
+  <a href="#jdm">05 JDM/Drift</a>
+  <a href="#mx5">06 Mazda MX-5</a>
+  <a href="#karting">07 Karting</a>
+  <a href="#iconicos">08 Circuitos icónicos</a>
+  <a href="#ovaladas">09 Ovaladas</a>
+  <a href="#usa">10 Road courses USA</a>
+  <a href="#callejero">11 Callejero</a>
+  <a href="#uk">12 Reino Unido</a>
+  <a href="#europa">13 Europa</a>
+  <a href="#masusa">14 Más USA/Asia</a>
+  <a href="#hillclimb">15 Hillclimb</a>
+  <a href="#groupc">16 Grupo C</a>
+  <a href="#nieve">17 Nieve</a>
+  <a href="#drag">18 Drag</a>
+  <a href="#offroad">19 Off-road</a>
+  <a href="#rookie">20 Rookie/D/C</a>
+  <a href="#extras">21 Extras</a>
+</nav>
+
+<main id="content"></main>
+
+<div class="hazard"></div>
+<footer>
+  <div class="footer-inner">
+    <h4>⚠ antes de descartar un mod</h4>
+    <p>assettoworld.com y assettohub.com son indexadores sin moderación de calidad — mezclan mods buenos con versiones rotas. Si un auto se siente resbaloso apenas sales a pista, entra al setup y sube la presión de neumáticos antes de asumir que el mod es malo. Varios GT3 gratis vienen por defecto en 19-21 psi cuando el rango real es 27-29.</p>
+    <p>Fuentes con reseñas reales antes de bajar algo: OverTake.gg (antes RaceDepartment), y las páginas propias de cada creador cuando existen (ChemFlummi, Guerilla Mods, GrippedUpMods).</p>
+    <div class="credit">armado a mano, sin generar humo — box de mods · assetto corsa</div>
+  </div>
+</footer>
+
+<script>
+const ICONS = {
+  car: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 13l1.6-4.6A2 2 0 0 1 6.5 7h11a2 2 0 0 1 1.9 1.4L21 13"/><rect x="2.5" y="13" width="19" height="5" rx="1.3"/><circle cx="7" cy="18.5" r="1.6"/><circle cx="17" cy="18.5" r="1.6"/></svg>',
+  track: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 16c0-6 4-11 9-11s7 3 7 6-3 4-6 4-5 1-5 4 2 5 5 5"/></svg>',
+  flag: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 3v18"/><path d="M5 4h6l1.5 2H19l-2 3 2 3h-8l-1.5-2H5"/></svg>',
+  bolt: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>',
+  snow: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M4.2 6l15.6 12M19.8 6 4.2 18"/></svg>',
+  user: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6"/></svg>'
+};
+
+const DATA = [
+ {id:"resistencia", num:"BOX 01", title:"Resistencia / Hypercar", icon:"car",
+  desc:"Prototipos LMP1, LMP2 y los hypercar que corren hoy en el WEC.",
+  items:[
+   {n:"Cadillac LMDh", note:"ChemFlummi", url:"https://chemflummi.com/mods/cadillac-lmdh.html"},
+   {n:"Nissan GT-R LM Nismo LMP1", note:"ChemFlummi", url:"https://chemflummi.com/mods/nissan-gtr-lm-nismo.html"},
+   {n:"Audi R10 TDI LMP1", note:"ChemFlummi", url:"https://chemflummi.com/mods/audi-r10-tdi.html"},
+   {n:"RWD Fenix P30-6 LMP1", note:"Ficticio, +340 km/h · ChemFlummi", url:"https://chemflummi.com/mods/fenix-p30-6-lmp1.html"},
+   {n:"RWD Fenix P20-4 LMP2", note:"ChemFlummi", url:"https://chemflummi.com/mods/fenix-p20-4-lmp2.html"},
+ ]},
+ {id:"gt", num:"BOX 02", title:"GT3 / GT4 / GT2", icon:"car",
+  desc:"De calle a pista: los GT que corren Nürburgring 24h y el mundial GT3.",
+  items:[
+   {n:"Ferrari 296 GT3", note:"ChemFlummi", url:"https://chemflummi.com/mods/ferrari-296-gt3.html"},
+   {n:"Dodge Viper GT3-R", note:"ChemFlummi", url:"https://chemflummi.com/mods/dodge-viper-gt3-r.html"},
+   {n:"BMW Z4 GT3", note:"ChemFlummi", url:"https://chemflummi.com/mods/bmw-z4-gt3.html"},
+   {n:"Bentley Continental GT3 2018", note:"ChemFlummi", url:"https://chemflummi.com/mods/bentley-continental-gt3.html"},
+   {n:"Corvette C7 GT3-R", note:"ChemFlummi", url:"https://chemflummi.com/mods/corvette-c7-gt3-r.html"},
+   {n:"Reiter Gallardo R-EX GT3", note:"ChemFlummi", url:"https://chemflummi.com/mods/reiter-gallardo-r-ex.html"},
+   {tag:true, n:"Guerilla Mods", note:"mismo equipo del Porsche Cup 992 que te anduvo bien · foro gratis", url:"https://www.guerilla-mods.de"},
+   {n:"BMW M6 GT3 (versión ACC)", note:"Guerilla Mods", url:"https://www.guerilla-mods.de"},
+   {n:"KTM X-Bow GT4", note:"Guerilla Mods", url:"https://www.guerilla-mods.de"},
+   {n:"KTM GT2", note:"Guerilla Mods", url:"https://www.guerilla-mods.de"},
+   {n:"Lamborghini Huracán ST EVO GT2", note:"Guerilla Mods", url:"https://www.guerilla-mods.de"},
+   {n:"Aston Martin Vantage GT4", note:"Guerilla Mods", url:"https://www.guerilla-mods.de"},
+   {n:"BMW M4 G82 GT4", note:"Guerilla Mods", url:"https://www.guerilla-mods.de"},
+   {n:"Pack GT4 completo", note:"física de ChemFlummi · Guerilla Mods", url:"https://www.guerilla-mods.de"},
+ ]},
+ {id:"formulas", num:"BOX 03", title:"Fórmulas", icon:"flag",
+  desc:"La escalera completa, de F4 a F1, más un clásico histórico.",
+  items:[
+   {n:"Tatuus T-421 (F4)", note:"", url:"https://www.assettohub.com/car/tatuus-t-421-f4/"},
+   {n:"Mygale M21-F4", note:"", url:"https://www.assettoworld.com/car/mygale-m21-f4"},
+   {n:"F2 2024", note:"", url:"https://assettocorsamods.io/cars/race/f2_2024/"},
+   {n:"CTDP F1 2006", note:"Schumacher vs Alonso · conversión de Cimmerian_Iter", url:"https://www.overtake.gg/threads/ctdp-f1-2006-mod-by-cimmerian_iter.293996/"},
+ ]},
+ {id:"turismos", num:"BOX 04", title:"Turismos / Rally / Rallycross", icon:"car",
+  desc:"Toque a toque en asfalto y tierra.",
+  items:[
+   {n:"5 mods esenciales de BTCC", note:"Nissan Primera, Volvo S40, BMW 320i y más", url:"https://www.overtake.gg/news/5-essential-free-touring-car-mods-for-assetto-corsa.2538/"},
+   {n:"V8 Corsa", note:"V8 Supercars australianos", url:"https://www.assettohub.com/"},
+   {n:"Rally — Assetto Hub", note:"Citroën C3 WRC, Peugeot 205 T16, Fiesta Rally2, Escort Cosworth y más", url:"https://www.assettohub.com/class/rally/"},
+   {n:"Franciacorta RallyCross RX", note:"pista mixta asfalto/tierra", url:"https://www.assettoworld.com/track/acf-franciacorta-rallycross-rx"},
+ ]},
+ {id:"jdm", num:"BOX 05", title:"JDM / Drift / Touge", icon:"bolt",
+  desc:"Ángulo, humo y las rutas de montaña japonesas.",
+  items:[
+   {n:"GrippedUpMods", note:"hub curado de drift/touge/JDM/street", url:"https://grippedupmods.com/downloads/collections/jdm-cars"},
+   {n:"Akina, Gunsai, Sportsland Akiyama", note:"touge ficticias japonesas · en GrippedUpMods", url:"https://grippedupmods.com/downloads/collections/jdm-cars"},
+   {n:"SLR Speed", note:"VDC 4.0 competición, WDT Street Spec", url:"https://slrspeed.com/collections/slr-assetto-corsa-digital-downloads-drift-the-best-tracks-cars-for-free"},
+ ]},
+ {id:"mx5", num:"BOX 06", title:"Mazda MX-5", icon:"car",
+  desc:"El auto que enseñó a medio mundo a manejar en pista.",
+  items:[
+   {n:"BLCKBOX Mazda MX5 Cup", note:"", url:"https://www.assettoworld.com/car/blckbox-mazda-mx5-cup"},
+   {n:"Mazda MX-5 Global Cup 2016", note:"con reseñas en OverTake", url:"https://www.overtake.gg/downloads/mazda-mx-5-global-cup-2016.6652/"},
+ ]},
+ {id:"karting", num:"BOX 07", title:"Karting", icon:"flag",
+  desc:"Donde todos los pilotos reales empezaron.",
+  items:[
+   {n:"GoKart", note:"varios modelos, incluye 125cc shifter", url:"https://www.overtake.gg/downloads/gokart.16419/"},
+   {n:"South Garda Karting", note:"circuito real italiano", url:"https://www.assettoworld.com/track/south-garda-karting"},
+  ]},
+ {id:"iconicos", num:"BOX 08", title:"Circuitos icónicos", icon:"track",
+  desc:"Los templos del automovilismo, todos gratis.",
+  items:[
+   {n:"Suzuka", note:"", url:"https://www.assettoworld.com/track/suzuka"},
+   {n:"Interlagos", note:"", url:"https://www.assettoworld.com/track/interlagos-gp"},
+   {n:"Le Mans (Circuit de la Sarthe)", note:"24h", url:"https://www.overtake.gg/downloads/circuit-24h-lemans.2482/"},
+   {n:"Bathurst / Mount Panorama", note:"", url:"https://www.assettoworld.com/track/bathurst-mount-panorama"},
+   {n:"Road Atlanta", note:"241 reseñas en OverTake", url:"https://www.overtake.gg/downloads/road-atlanta.18293/"},
+   {n:"Virginia International Raceway", note:"7 trazados", url:"https://www.overtake.gg/downloads/virginia-international-raceway.11892/"},
+   {n:"Circuit of the Americas (COTA)", note:"versión BLCKBOX", url:"https://www.assettoworld.com/track/circuit-of-the-americas-national"},
+  ]},
+ {id:"ovaladas", num:"BOX 09", title:"Ovaladas estilo NASCAR", icon:"track",
+  desc:"32 óvalos en un solo pack, todo el calendario clásico.",
+  items:[
+   {n:"JNS Trackpack — 32 pistas", note:"Daytona, Talladega, Martinsville, Bristol, Richmond, Indianápolis y más", url:"https://www.overtake.gg/downloads/jns-trackpack-32-oval-tracks.12959/"},
+  ]},
+ {id:"usa", num:"BOX 10", title:"Road courses de EE.UU.", icon:"track",
+  desc:"El corazón del calendario IMSA.",
+  items:[
+   {n:"Road America", note:"", url:"https://www.overtake.gg/downloads/road-america.32732/"},
+   {n:"Sebring", note:"", url:"https://www.assettohub.com/track/sebring-international-raceway/"},
+   {n:"Watkins Glen", note:"", url:"https://www.assettoworld.com/track/watkins-glen"},
+   {n:"Mid-Ohio", note:"", url:"https://www.assettoworld.com/track/mid-ohio-sports-car-course"},
+  ]},
+ {id:"callejero", num:"BOX 11", title:"Callejero", icon:"track",
+  desc:"Muros a 30 centímetros del espejo.",
+  items:[
+   {n:"Long Beach", note:"", url:"https://www.assettoworld.com/track/long-beach"},
+  ]},
+ {id:"uk", num:"BOX 12", title:"Reino Unido", icon:"track",
+  desc:"Circuitos de club, técnicos y angostos — perfectos para F4/F3.",
+  items:[
+   {n:"Donington Park 2023 GP", note:"", url:"https://www.assettoworld.com/track/donington-park-2023-gp"},
+   {n:"Oulton Park International 2022", note:"", url:"https://www.assettoworld.com/track/oulton-park-international-2022-2"},
+   {n:"Cadwell Park", note:"mismo Jim Lloyd de Road Atlanta, \"el mini Nürburgring\"", url:"https://www.overtake.gg/downloads/cadwell-park.11507/"},
+   {n:"Knockhill", note:"Escocia", url:"https://www.assettoworld.com/track/knockhill"},
+  ]},
+ {id:"europa", num:"BOX 13", title:"Europa continental", icon:"track",
+  desc:"Del calendario clásico de F1 a las pistas de club.",
+  items:[
+   {n:"Hockenheim", note:"Alemania", url:"https://www.assettoworld.com/track/hockenheim-gp"},
+   {n:"Magny-Cours", note:"Francia", url:"https://www.assettoworld.com/track/magny-cours"},
+   {n:"Hungaroring", note:"Hungría", url:"https://assettocorsamods.io/tracks/hungaroring/"},
+   {n:"Zolder", note:"Bélgica", url:"https://www.assettoworld.com/track/circuit-zolder"},
+   {n:"Algarve / Portimão", note:"Portugal, reseñas excelentes", url:"https://www.overtake.gg/downloads/algarve-portimao-2023.64764/"},
+  ]},
+ {id:"masusa", num:"BOX 14", title:"Más EE.UU. / Asia", icon:"track",
+  desc:"Lo que faltaba del mapa.",
+  items:[
+   {n:"Barber Motorsports Park", note:"", url:"https://assettocorsamods.io/tracks/barber_motor_sports_park/"},
+   {n:"Sonoma Raceway", note:"", url:"https://www.assettoworld.com/track/sonoma-raceway-long-circuit"},
+   {n:"Fuji Speedway", note:"Japón", url:"https://www.modland.net/assetto-corsa-mods/tracks/fuji-international-speedway-2.html"},
+  ]},
+ {id:"hillclimb", num:"BOX 15", title:"Hillclimb", icon:"track",
+  desc:"Sin vuelta atrás: subida a la montaña.",
+  items:[
+   {n:"Pikes Peak", note:"Colorado, 19,99 km", url:"https://www.assettoworld.com/track/pikes-peak-usa-hill-climb"},
+   {n:"Goodwood Festival of Speed", note:"", url:"https://www.assettoworld.com/track/goodwood-hillclimb-hq"},
+   {n:"Catálogo de autos hillclimb", note:"Hoonipigasus, Evo X, Lancia Delta, Ferrari 288 GTO", url:"https://assettocorsamods.io/cars/hillclimb/"},
+  ]},
+ {id:"groupc", num:"BOX 16", title:"Grupo C histórico (80s-90s)", icon:"car",
+  desc:"Prototipos de los 80 y 90, con turbo y sin ayudas.",
+  items:[
+   {n:"AC Legends", note:"pack histórico enorme, buscar \"AC Legends 3.0\" en foros de AC", url:"#"},
+   {n:"Virtua LM Group C 1990-2000 (GRT-RT-500)", note:"proyecto cancelado antes de salir — no está disponible", url:"", disabled:true},
+   {n:"Group C 80s", note:"TonyBarracuda + GTsupreme, conversión terminada de los modelos Virtua LM", url:"https://www.patreon.com/gtsupreme/posts/all-group-c-80s-77453087"},
+  ]},
+ {id:"nieve", num:"BOX 17", title:"Nieve / Invierno", icon:"snow",
+  desc:"Las mismas pistas, con hielo bajo las gomas.",
+  items:[
+   {n:"Deems Winter Track Pack", note:"convierte pistas que ya tienes en versión nevada", url:"https://www.overtake.gg/downloads/deems-winter-track-pack-snow-edition-2.24821/"},
+   {n:"Bannochbrae Snow", note:"pista ficticia de invierno", url:"https://www.assettoworld.com/track/bannochbrae_snow"},
+   {n:"Tsukuba Fruits Line Snow", note:"la ruta touge clásica, nevada", url:"https://grippedupmods.com/downloads/tracks/tsukuba-fruits-line-snow"},
+  ]},
+ {id:"drag", num:"BOX 18", title:"Drag racing", icon:"bolt",
+  desc:"400 metros, un solo objetivo.",
+  items:[
+   {n:"NHRA Top Fuel Dragster", note:"por Mickstix, con reseñas en OverTake", url:"https://www.overtake.gg/downloads/nhra-top-fuel-dragster.72761/"},
+   {n:"Catálogo drag — Assetto Hub", note:"", url:"https://www.assettohub.com/class/drag/"},
+   {n:"DragRacePro", note:"árbol de luces real y tiempos de reacción", url:"https://www.dragracepro.com/"},
+  ]},
+ {id:"offroad", num:"BOX 19", title:"Off-road / Baja", icon:"car",
+  desc:"Desierto, saltos y suspensión al límite.",
+  items:[
+   {n:"Trophy Truck (Kinetik)", note:"", url:"https://assettocorsamods.io/cars/race/trophy_truck/"},
+   {n:"Toyota #1 T100 Baja Truck", note:"", url:"https://assettocorsamods.io/cars/race/toyota_1_t100_baja_truck/"},
+  ]},
+ {id:"rookie", num:"BOX 20", title:"Calendario Rookie / D / C de iRacing", icon:"flag",
+  desc:"Las pistas donde se foguea todo piloto de iRacing, replicadas gratis acá.",
+  items:[
+   {n:"Lime Rock Park", note:"", url:"https://www.assettoworld.com/track/lime-rock-park-full-circuit"},
+   {n:"Tsukuba Circuit", note:"", url:"https://www.assettoworld.com/track/tsukuba-circuit-full"},
+   {n:"Snetterton", note:"", url:"https://www.overtake.gg/downloads/snetterton-2011.61932/"},
+   {n:"Motorsport Arena Oschersleben", note:"", url:"https://www.assettoworld.com/track/oschersleben-gp"},
+   {n:"Okayama Grand Prix", note:"", url:"https://www.assettoworld.com/track/okayama-grand-prix"},
+   {n:"Summit Point Raceway", note:"", url:"https://www.assettoworld.com/track/summit-point-raceway"},
+   {n:"Winton Motor Raceway", note:"Australia", url:"https://www.assettoworld.com/track/winton"},
+  ]},
+ {id:"extras", num:"BOX 21", title:"Extras — creadores", icon:"user",
+  desc:"Los equipos y personas detrás de los mods que ya usas.",
+  items:[
+   {n:"Peter Boese", note:"creador real de Sol y Pure · $1/mes", url:"https://www.patreon.com/peterboese"},
+   {n:"x4fab (Ilja Jusupov)", note:"creador de Custom Shaders Patch · $1/mes", url:"https://www.patreon.com/x4fab"},
+   {n:"Guerilla Mods", note:"foro gratis + Patreon opcional", url:"https://www.patreon.com/guerilla"},
+   {n:"MNBA", note:"autos de calle detallados, BMW/Mercedes · $3/mes", url:"https://www.patreon.com/mnba"},
+   {n:"The Race Project", note:"temporadas históricas de F1 · $6.50/mes", url:"https://www.patreon.com/"},
+  ]},
+];
+
+const content = document.getElementById('content');
+DATA.forEach(cat=>{
+  const sec = document.createElement('section');
+  sec.className='category';
+  sec.id=cat.id;
+  sec.innerHTML = `
+    <div class="cat-head">
+      <div class="box-num">${cat.num}</div>
+      <h2>${cat.title}</h2>
+      <p>${cat.desc}</p>
+    </div>
+    <div class="grid">
+      ${cat.items.map(it=>{
+        if(it.tag){
+          return `<div class="card group-tag">${ICONS.user}<h3>${it.n}</h3><span class="note">${it.note}</span></div>`;
+        }
+        const disabled = it.disabled ? ' disabled' : '';
+        const link = it.url && it.url!=="#" && !it.disabled
+          ? `<a class="go" href="${it.url}" target="_blank" rel="noopener">Ir al mod →</a>`
+          : (it.disabled ? `<span class="go" style="color:var(--ink-faint)">No disponible</span>` : `<span class="go" style="color:var(--ink-faint)">Buscar por nombre</span>`);
+        return `<div class="card${disabled}">
+          ${ICONS[cat.icon]}
+          <h3>${it.n}</h3>
+          <div class="note">${it.note}</div>
+          ${link}
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+  content.appendChild(sec);
+});
+
+/* scrollspy */
+const navLinks = [...document.querySelectorAll('#pitNav a')];
+const sections = [...document.querySelectorAll('section.category')];
+const spy = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const link = navLinks.find(a=>a.getAttribute('href')===`#${e.target.id}`);
+      if(link){
+        navLinks.forEach(a=>a.classList.remove('active'));
+        link.classList.add('active');
+        link.scrollIntoView({inline:'center', block:'nearest', behavior:'smooth'});
+      }
+    }
+  });
+}, {rootMargin:'-45% 0px -50% 0px'});
+sections.forEach(s=>spy.observe(s));
+</script>
+</body>
+</html>
