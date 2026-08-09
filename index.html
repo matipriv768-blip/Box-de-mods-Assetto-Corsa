@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Catálogo de mods gratis para Assetto Corsa, armado a mano con enlaces directos y versiones probadas.">
+<meta name="theme-color" content="#E31E2B">
+<meta property="og:title" content="Box de Mods — Assetto Corsa">
+<meta property="og:description" content="Catálogo de mods gratis, armado a mano con enlaces directos y versiones probadas.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1758563920442-280b4e7afe7a?fm=jpg&q=60&w=800&auto=format&fit=crop">
+<meta property="og:type" content="website">
 <title>Box de Mods — Assetto Corsa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -144,6 +149,25 @@
   }
   .nav-arrow:hover{color:var(--amber);}
   .nav-arrow:first-child{border-right:1px solid var(--line);}
+  
+  /* Buscador */
+  .mod-search {
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: .8rem;
+    padding: .4rem .6rem;
+    border-radius: 4px;
+    width: 120px;
+    outline: none;
+    transition: border-color .15s;
+    margin-right: .5rem;
+  }
+  .mod-search:focus {
+    border-color: var(--amber);
+  }
+  
   .theme-toggle{
     flex:0 0 auto;
     width:34px;height:44px;
@@ -245,7 +269,6 @@
 
   .grid{
     display:grid;
-    /* REDUCIDO A 230px PARA MEJORAR VISTA EN MÓVILES */
     grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
     gap:1px;
     background:var(--line);
@@ -381,6 +404,7 @@
     .hero{padding:4rem 1.2rem 2.6rem;}
     .stat-row{gap:1.4rem;}
     .stat b{font-size:1.8rem;}
+    .mod-search { width: 90px; font-size: .75rem; margin-right: 0; }
   }
 </style>
 </head>
@@ -432,11 +456,12 @@
     <a href="#rookie">20 Rookie/D/C</a>
     <a href="#extras">21 Extras</a>
   </nav>
-  <button class="nav-arrow" id="navRight" aria-label="Desplazar menú a la derecha">›</button>
+  <input type="text" id="buscadorMods" class="mod-search" placeholder="Buscar mod..." aria-label="Buscar en el catálogo">
   <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">
     <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
     <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="display:none"><path d="M20 14.2A8.2 8.2 0 1 1 9.8 4a6.8 6.8 0 0 0 10.2 10.2z"/></svg>
   </button>
+  <button class="nav-arrow" id="navRight" aria-label="Desplazar menú a la derecha">›</button>
 </div>
 
 <main id="content"></main>
@@ -702,7 +727,6 @@ DATA.forEach(cat=>{
           return `<div class="card group-tag">${ICONS.user}<h3>${it.n}</h3><span class="note">${it.note}</span></div>`;
         }
         const disabled = it.disabled ? ' disabled' : '';
-        // ACÁ ESTÁ EL ARIA-LABEL INYECTADO PARA LECTORES DE PANTALLA
         const link = it.url && it.url!=="#" && !it.disabled
           ? `<a class="go" href="${it.url}" target="_blank" rel="noopener" aria-label="Ir al mod ${it.n}">Ir al mod →</a>`
           : (it.disabled ? `<span class="go" style="color:var(--ink-faint)">No disponible</span>` : `<span class="go" style="color:var(--ink-faint)">Buscar por nombre</span>`);
@@ -783,6 +807,30 @@ document.getElementById('btnUp').addEventListener('click', ()=>{
 document.getElementById('btnDown').addEventListener('click', ()=>{
   const target = sections[currentIndex+1];
   if(target){ target.scrollIntoView({behavior:'smooth'}); }
+});
+
+/* Buscador en tiempo real */
+const buscador = document.getElementById('buscadorMods');
+buscador.addEventListener('input', (e) => {
+  const termino = e.target.value.toLowerCase();
+  const categoriasDom = document.querySelectorAll('section.category');
+
+  categoriasDom.forEach(cat => {
+    const tarjetas = cat.querySelectorAll('.card:not(.group-tag)'); 
+    let hayVisibles = false;
+
+    tarjetas.forEach(tarjeta => {
+      const texto = tarjeta.textContent.toLowerCase();
+      if (texto.includes(termino)) {
+        tarjeta.style.display = 'flex';
+        hayVisibles = true;
+      } else {
+        tarjeta.style.display = 'none';
+      }
+    });
+
+    cat.style.display = hayVisibles ? 'block' : 'none';
+  });
 });
 </script>
 </body>
