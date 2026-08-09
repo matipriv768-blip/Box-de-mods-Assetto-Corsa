@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Catálogo de mods gratis para Assetto Corsa, armado a mano con enlaces directos y versiones probadas.">
-<meta name="theme-color" content="#E31E2B">
-<meta property="og:title" content="Box de Mods — Assetto Corsa">
-<meta property="og:description" content="Catálogo de mods gratis, armado a mano con enlaces directos y versiones probadas.">
-<meta property="og:image" content="https://images.unsplash.com/photo-1758563920442-280b4e7afe7a?fm=jpg&q=60&w=800&auto=format&fit=crop">
-<meta property="og:type" content="website">
 <title>Box de Mods — Assetto Corsa</title>
+<meta name="description" content="Catálogo de mods gratis para Assetto Corsa: resistencia, GT3, fórmulas, rally, drift, karting y más de 15 circuitos. Todo probado, con link directo.">
+<meta property="og:title" content="Box de Mods — Assetto Corsa">
+<meta property="og:description" content="Catálogo de mods gratis para Assetto Corsa, armado categoría por categoría con link directo a cada uno.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1758563920442-280b4e7afe7a?fm=jpg&q=70&w=1200&auto=format&fit=crop">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -70,7 +70,6 @@
     text-align:center;
     overflow:hidden;
     border-bottom:1px solid var(--line);
-    /* SUGERENCIA: Cambiar la URL por un archivo local WebP para cargar más rápido */
     background:
       radial-gradient(ellipse at 50% -10%, rgba(227,30,43,.16), transparent 60%),
       linear-gradient(rgba(9,9,10,.72), rgba(9,9,10,.85)),
@@ -149,25 +148,6 @@
   }
   .nav-arrow:hover{color:var(--amber);}
   .nav-arrow:first-child{border-right:1px solid var(--line);}
-  
-  /* Buscador */
-  .mod-search {
-    background: var(--bg-panel);
-    border: 1px solid var(--line);
-    color: var(--ink);
-    font-family: 'Inter', sans-serif;
-    font-size: .8rem;
-    padding: .4rem .6rem;
-    border-radius: 4px;
-    width: 120px;
-    outline: none;
-    transition: border-color .15s;
-    margin-right: .5rem;
-  }
-  .mod-search:focus {
-    border-color: var(--amber);
-  }
-  
   .theme-toggle{
     flex:0 0 auto;
     width:34px;height:44px;
@@ -213,6 +193,21 @@
 
   /* ---------- MAIN / SECTIONS ---------- */
   main{max-width:1080px;margin:0 auto;padding:0 1.5rem;}
+  .search-wrap{padding:1.6rem 0 0;}
+  .search-wrap input{
+    width:100%;
+    background:var(--bg-panel-2);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:.85rem 1rem;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:.95rem;
+    outline:none;
+    transition:.15s;
+  }
+  .search-wrap input::placeholder{color:var(--ink-faint);}
+  .search-wrap input:focus{border-color:var(--amber);}
   .lead{
     max-width:640px;
     margin:3rem auto 0;
@@ -269,7 +264,7 @@
 
   .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(225px,1fr));
     gap:1px;
     background:var(--line);
     border:1px solid var(--line);
@@ -333,7 +328,6 @@
     background:repeating-linear-gradient(135deg, var(--amber) 0 14px, #0C0C0E 14px 28px);
   }
   footer{
-    /* SUGERENCIA: Cambiar la URL por un archivo local WebP para cargar más rápido */
     background:
       linear-gradient(rgba(23,23,26,.93), rgba(23,23,26,.97)),
       url('https://images.unsplash.com/photo-1624224290198-d1b252d63310?fm=jpg&q=60&w=1600&auto=format&fit=crop') center/cover no-repeat;
@@ -349,6 +343,24 @@
     margin:0 0 .6rem;
   }
   footer p{color:var(--ink-dim);font-size:.9rem;margin:0 0 1rem;}
+  .discord-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+    background:var(--amber);
+    color:#0C0C0E;
+    font-family:'Space Mono',monospace;
+    font-size:.8rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    text-decoration:none;
+    padding:.7rem 1.2rem;
+    border-radius:5px;
+    margin-top:.4rem;
+    transition:.15s;
+  }
+  .discord-btn:hover{filter:brightness(1.1);}
+  .discord-btn svg{width:18px;height:18px;}
   footer .credit{
     font-family:'Space Mono',monospace;
     font-size:.72rem;
@@ -404,7 +416,6 @@
     .hero{padding:4rem 1.2rem 2.6rem;}
     .stat-row{gap:1.4rem;}
     .stat b{font-size:1.8rem;}
-    .mod-search { width: 90px; font-size: .75rem; margin-right: 0; }
   }
 </style>
 </head>
@@ -456,15 +467,18 @@
     <a href="#rookie">20 Rookie/D/C</a>
     <a href="#extras">21 Extras</a>
   </nav>
-  <input type="text" id="buscadorMods" class="mod-search" placeholder="Buscar mod..." aria-label="Buscar en el catálogo">
+  <button class="nav-arrow" id="navRight" aria-label="Desplazar menú a la derecha">›</button>
   <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">
     <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
     <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="display:none"><path d="M20 14.2A8.2 8.2 0 1 1 9.8 4a6.8 6.8 0 0 0 10.2 10.2z"/></svg>
   </button>
-  <button class="nav-arrow" id="navRight" aria-label="Desplazar menú a la derecha">›</button>
 </div>
 
-<main id="content"></main>
+<main id="content">
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Buscar un mod... (ej: Ferrari, nieve, Le Mans)">
+  </div>
+</main>
 
 <div class="hazard"></div>
 <footer>
@@ -472,6 +486,10 @@
     <h4>⚠ antes de descartar un mod</h4>
     <p>assettoworld.com y assettohub.com son indexadores sin moderación de calidad — mezclan mods buenos con versiones rotas. Si un auto se siente resbaloso apenas sales a pista, entra al setup y sube la presión de neumáticos antes de asumir que el mod es malo. Varios GT3 gratis vienen por defecto en 19-21 psi cuando el rango real es 27-29.</p>
     <p>Fuentes con reseñas reales antes de bajar algo: OverTake.gg (antes RaceDepartment), y las páginas propias de cada creador cuando existen (ChemFlummi, Guerilla Mods, GrippedUpMods).</p>
+    <a class="discord-btn" href="https://discord.gg/XQpquRgae" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 12c0 1-1.5 2-1.5 2S5 13 5 10c0-2 1-4 3-4.5C9 5 10.5 5 12 5s3-.2 4 .5c2 .5 3 2.5 3 4.5 0 3-1.5 4-1.5 4S16 13 16 12"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/><path d="M7 16c1.5 1 3 1.5 5 1.5s3.5-.5 5-1.5"/></svg>
+      Únete al Discord
+    </a>
     <div class="credit">armado a mano, sin generar humo — box de mods · assetto corsa</div>
   </div>
 </footer>
@@ -484,6 +502,11 @@
 <script>
 const ICONS = {
   car: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 13l1.6-4.6A2 2 0 0 1 6.5 7h11a2 2 0 0 1 1.9 1.4L21 13"/><rect x="2.5" y="13" width="19" height="5" rx="1.3"/><circle cx="7" cy="18.5" r="1.6"/><circle cx="17" cy="18.5" r="1.6"/></svg>',
+  hypercar: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 15h1.5M20.5 15H22M4 15l1-3c1-2 3-3 6-3h2c3 0 5 1 6 3l1 3"/><circle cx="6.5" cy="17" r="1.6"/><circle cx="17.5" cy="17" r="1.6"/><path d="M18 8.5v3M20.3 8.5v3M17.2 8.5h3.4"/></svg>',
+  openwheel: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="4.5" cy="16" r="2.1"/><circle cx="19.5" cy="16" r="2.1"/><rect x="7" y="13" width="10" height="3" rx="1.4"/><path d="M6.3 10.3h11.4"/></svg>',
+  rally: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 15Q4 9 8 8h8q4 1 5 7"/><rect x="10" y="6" width="4" height="2" rx="1"/><circle cx="7" cy="17" r="1.8"/><circle cx="17" cy="17" r="1.8"/></svg>',
+  kart: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="13" width="12" height="3" rx="1"/><circle cx="5" cy="16" r="2"/><circle cx="19" cy="16" r="2"/><path d="M8 13V9h8v4"/></svg>',
+  dragster: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 16h9M12 16h11"/><circle cx="5" cy="17" r="1.3"/><circle cx="19" cy="17.5" r="2.2"/><path d="M9 16v-3h6l2 3"/><path d="M17 10v3M19 10v3"/></svg>',
   track: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 16c0-6 4-11 9-11s7 3 7 6-3 4-6 4-5 1-5 4 2 5 5 5"/></svg>',
   flag: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 3v18"/><path d="M5 4h6l1.5 2H19l-2 3 2 3h-8l-1.5-2H5"/></svg>',
   bolt: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>',
@@ -531,7 +554,7 @@ const BANNER_MAP = {
 };
 
 const DATA = [
- {id:"resistencia", num:"BOX 01", title:"Resistencia / Hypercar", icon:"car",
+ {id:"resistencia", num:"BOX 01", title:"Resistencia / Hypercar", icon:"hypercar",
   desc:"Prototipos LMP1, LMP2 y los hypercar que corren hoy en el WEC.",
   items:[
    {n:"Cadillac LMDh", note:"ChemFlummi", url:"https://chemflummi.com/mods/cadillac-lmdh.html"},
@@ -558,11 +581,12 @@ const DATA = [
    {n:"BMW M4 G82 GT4", note:"Guerilla Mods", url:"https://www.guerilla-mods.de"},
    {n:"Pack GT4 completo", note:"física de ChemFlummi · Guerilla Mods", url:"https://www.guerilla-mods.de"},
  ]},
- {id:"formulas", num:"BOX 03", title:"Fórmulas", icon:"flag",
+ {id:"formulas", num:"BOX 03", title:"Fórmulas", icon:"openwheel",
   desc:"La escalera completa, de F4 a F1, más un clásico histórico.",
   items:[
    {n:"Tatuus T-421 (F4)", note:"", url:"https://www.assettohub.com/car/tatuus-t-421-f4/"},
    {n:"Mygale M21-F4", note:"", url:"https://www.assettoworld.com/car/mygale-m21-f4"},
+   {n:"Formula RSS 4", note:"gratis directo de la tienda de RSS", url:"https://store.racesimstudio.com/p/rss4/"},
    {n:"F2 2024", note:"", url:"https://assettocorsamods.io/cars/race/f2_2024/"},
    {n:"CTDP F1 2006", note:"Schumacher vs Alonso · conversión de Cimmerian_Iter", url:"https://www.overtake.gg/threads/ctdp-f1-2006-mod-by-cimmerian_iter.293996/"},
  ]},
@@ -626,7 +650,7 @@ const DATA = [
   desc:"Circuitos de club, técnicos y angostos — perfectos para F4/F3.",
   items:[
    {n:"Donington Park 2023 GP", note:"", url:"https://www.assettoworld.com/track/donington-park-2023-gp"},
-   {n:"Oulton Park International 2022", note:"", url:"https://www.assettoworld.com/track/oultoun-park-international-2022-2"},
+   {n:"Oulton Park International 2022", note:"", url:"https://www.assettoworld.com/track/oulton-park-international-2022-2"},
    {n:"Cadwell Park", note:"mismo Jim Lloyd de Road Atlanta, \"el mini Nürburgring\"", url:"https://www.overtake.gg/downloads/cadwell-park.11507/"},
    {n:"Knockhill", note:"Escocia", url:"https://www.assettoworld.com/track/knockhill"},
   ]},
@@ -731,7 +755,7 @@ DATA.forEach(cat=>{
           ? `<a class="go" href="${it.url}" target="_blank" rel="noopener" aria-label="Ir al mod ${it.n}">Ir al mod →</a>`
           : (it.disabled ? `<span class="go" style="color:var(--ink-faint)">No disponible</span>` : `<span class="go" style="color:var(--ink-faint)">Buscar por nombre</span>`);
         return `<div class="card${disabled}">
-          ${ICONS[cat.icon]}
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${CAT_ICONS[cat.id] || ''}</svg>
           <h3>${it.n}</h3>
           <div class="note">${it.note}</div>
           ${link}
@@ -762,32 +786,38 @@ const spy = new IntersectionObserver((entries)=>{
 }, {rootMargin:'-45% 0px -50% 0px'});
 sections.forEach(s=>spy.observe(s));
 
-/* tema claro/oscuro con detección del sistema */
+/* tema claro/oscuro */
 const root = document.documentElement;
 const themeBtn = document.getElementById('themeToggle');
 const iconSun = document.getElementById('iconSun');
 const iconMoon = document.getElementById('iconMoon');
-
 function applyTheme(t){
-  if(t === 'light'){ 
-    root.setAttribute('data-theme','light'); 
-    iconSun.style.display='none'; 
-    iconMoon.style.display='block'; 
-  } else { 
-    root.removeAttribute('data-theme'); 
-    iconSun.style.display='block'; 
-    iconMoon.style.display='none'; 
-  }
+  if(t === 'light'){ root.setAttribute('data-theme','light'); iconSun.style.display='none'; iconMoon.style.display='block'; }
+  else { root.removeAttribute('data-theme'); iconSun.style.display='block'; iconMoon.style.display='none'; }
 }
-
 const savedTheme = localStorage.getItem('bdm-theme');
 const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
 applyTheme(savedTheme || (systemPrefersLight ? 'light' : 'dark'));
-
 themeBtn.addEventListener('click', ()=>{
   const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
   localStorage.setItem('bdm-theme', next);
   applyTheme(next);
+});
+
+/* buscador */
+function normalizar(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  const q = normalizar(e.target.value.trim());
+  sections.forEach(sec=>{
+    let algunaVisible = false;
+    sec.querySelectorAll('.card').forEach(card=>{
+      const texto = normalizar(card.textContent);
+      const coincide = !q || texto.includes(q);
+      card.style.display = coincide ? '' : 'none';
+      if(coincide) algunaVisible = true;
+    });
+    sec.style.display = (!q || algunaVisible) ? '' : 'none';
+  });
 });
 
 /* flechas horizontales del menú */
@@ -807,30 +837,6 @@ document.getElementById('btnUp').addEventListener('click', ()=>{
 document.getElementById('btnDown').addEventListener('click', ()=>{
   const target = sections[currentIndex+1];
   if(target){ target.scrollIntoView({behavior:'smooth'}); }
-});
-
-/* Buscador en tiempo real */
-const buscador = document.getElementById('buscadorMods');
-buscador.addEventListener('input', (e) => {
-  const termino = e.target.value.toLowerCase();
-  const categoriasDom = document.querySelectorAll('section.category');
-
-  categoriasDom.forEach(cat => {
-    const tarjetas = cat.querySelectorAll('.card:not(.group-tag)'); 
-    let hayVisibles = false;
-
-    tarjetas.forEach(tarjeta => {
-      const texto = tarjeta.textContent.toLowerCase();
-      if (texto.includes(termino)) {
-        tarjeta.style.display = 'flex';
-        hayVisibles = true;
-      } else {
-        tarjeta.style.display = 'none';
-      }
-    });
-
-    cat.style.display = hayVisibles ? 'block' : 'none';
-  });
 });
 </script>
 </body>
