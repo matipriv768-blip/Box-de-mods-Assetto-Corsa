@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Catálogo de mods gratis para Assetto Corsa, armado a mano con enlaces directos y versiones probadas.">
 <title>Box de Mods — Assetto Corsa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -64,6 +65,7 @@
     text-align:center;
     overflow:hidden;
     border-bottom:1px solid var(--line);
+    /* SUGERENCIA: Cambiar la URL por un archivo local WebP para cargar más rápido */
     background:
       radial-gradient(ellipse at 50% -10%, rgba(227,30,43,.16), transparent 60%),
       linear-gradient(rgba(9,9,10,.72), rgba(9,9,10,.85)),
@@ -243,7 +245,8 @@
 
   .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+    /* REDUCIDO A 230px PARA MEJORAR VISTA EN MÓVILES */
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
     gap:1px;
     background:var(--line);
     border:1px solid var(--line);
@@ -307,6 +310,7 @@
     background:repeating-linear-gradient(135deg, var(--amber) 0 14px, #0C0C0E 14px 28px);
   }
   footer{
+    /* SUGERENCIA: Cambiar la URL por un archivo local WebP para cargar más rápido */
     background:
       linear-gradient(rgba(23,23,26,.93), rgba(23,23,26,.97)),
       url('https://images.unsplash.com/photo-1624224290198-d1b252d63310?fm=jpg&q=60&w=1600&auto=format&fit=crop') center/cover no-repeat;
@@ -597,7 +601,7 @@ const DATA = [
   desc:"Circuitos de club, técnicos y angostos — perfectos para F4/F3.",
   items:[
    {n:"Donington Park 2023 GP", note:"", url:"https://www.assettoworld.com/track/donington-park-2023-gp"},
-   {n:"Oulton Park International 2022", note:"", url:"https://www.assettoworld.com/track/oulton-park-international-2022-2"},
+   {n:"Oulton Park International 2022", note:"", url:"https://www.assettoworld.com/track/oultoun-park-international-2022-2"},
    {n:"Cadwell Park", note:"mismo Jim Lloyd de Road Atlanta, \"el mini Nürburgring\"", url:"https://www.overtake.gg/downloads/cadwell-park.11507/"},
    {n:"Knockhill", note:"Escocia", url:"https://www.assettoworld.com/track/knockhill"},
   ]},
@@ -698,8 +702,9 @@ DATA.forEach(cat=>{
           return `<div class="card group-tag">${ICONS.user}<h3>${it.n}</h3><span class="note">${it.note}</span></div>`;
         }
         const disabled = it.disabled ? ' disabled' : '';
+        // ACÁ ESTÁ EL ARIA-LABEL INYECTADO PARA LECTORES DE PANTALLA
         const link = it.url && it.url!=="#" && !it.disabled
-          ? `<a class="go" href="${it.url}" target="_blank" rel="noopener">Ir al mod →</a>`
+          ? `<a class="go" href="${it.url}" target="_blank" rel="noopener" aria-label="Ir al mod ${it.n}">Ir al mod →</a>`
           : (it.disabled ? `<span class="go" style="color:var(--ink-faint)">No disponible</span>` : `<span class="go" style="color:var(--ink-faint)">Buscar por nombre</span>`);
         return `<div class="card${disabled}">
           ${ICONS[cat.icon]}
@@ -733,16 +738,28 @@ const spy = new IntersectionObserver((entries)=>{
 }, {rootMargin:'-45% 0px -50% 0px'});
 sections.forEach(s=>spy.observe(s));
 
-/* tema claro/oscuro */
+/* tema claro/oscuro con detección del sistema */
 const root = document.documentElement;
 const themeBtn = document.getElementById('themeToggle');
 const iconSun = document.getElementById('iconSun');
 const iconMoon = document.getElementById('iconMoon');
+
 function applyTheme(t){
-  if(t === 'light'){ root.setAttribute('data-theme','light'); iconSun.style.display='none'; iconMoon.style.display='block'; }
-  else { root.removeAttribute('data-theme'); iconSun.style.display='block'; iconMoon.style.display='none'; }
+  if(t === 'light'){ 
+    root.setAttribute('data-theme','light'); 
+    iconSun.style.display='none'; 
+    iconMoon.style.display='block'; 
+  } else { 
+    root.removeAttribute('data-theme'); 
+    iconSun.style.display='block'; 
+    iconMoon.style.display='none'; 
+  }
 }
-applyTheme(localStorage.getItem('bdm-theme') || 'dark');
+
+const savedTheme = localStorage.getItem('bdm-theme');
+const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+applyTheme(savedTheme || (systemPrefersLight ? 'light' : 'dark'));
+
 themeBtn.addEventListener('click', ()=>{
   const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
   localStorage.setItem('bdm-theme', next);
