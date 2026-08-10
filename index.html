@@ -237,6 +237,39 @@
     text-transform:uppercase;
     letter-spacing:.05em;
   }
+
+  .news{
+    margin:1.4rem 0 0;
+    padding:1rem 1.1rem;
+    background:var(--bg-panel-2);
+    border:1px solid var(--line);
+    border-radius:4px;
+  }
+  .news h3{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    font-size:.75rem;
+    color:var(--amber);
+    margin:0 0 .7rem;
+  }
+  .news ul{margin:0;padding:0;list-style:none;}
+  .news li{
+    display:flex;
+    gap:.7rem;
+    font-size:.85rem;
+    color:var(--ink-dim);
+    padding:.4rem 0;
+    border-top:1px solid var(--line);
+  }
+  .news li:first-child{border-top:none;}
+  .news .news-date{
+    flex:0 0 auto;
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;
+    color:var(--ink-faint);
+    white-space:nowrap;
+  }
   .lead{
     max-width:640px;
     margin:3rem auto 0;
@@ -348,6 +381,41 @@
   }
   .copy-btn:hover{color:var(--cyan);}
   .copy-btn svg{width:15px;height:15px;}
+
+  .installed-check{
+    display:flex;
+    align-items:center;
+    gap:.4rem;
+    font-family:'Space Mono',monospace;
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:var(--ink-faint);
+    cursor:pointer;
+    user-select:none;
+  }
+  .installed-check input{
+    appearance:none;
+    width:15px;height:15px;
+    border:1.5px solid var(--line);
+    border-radius:3px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    flex:0 0 auto;
+  }
+  .installed-check input:checked{
+    background:var(--green);
+    border-color:var(--green);
+  }
+  .installed-check input:checked::after{
+    content:"✓";
+    color:#0C0C0E;
+    font-size:11px;
+    font-weight:bold;
+    line-height:1;
+  }
+  .card.is-installed{opacity:.55;}
+  .card.is-installed h3{text-decoration:line-through;}
   .card.disabled{opacity:.45;}
   .card.disabled h3{text-decoration:line-through;}
 
@@ -474,7 +542,7 @@
     <h1>BOX DE <span>MODS</span></h1>
     <p class="sub">Catálogo de mods gratis para Assetto Corsa, armado categoría por categoría con link directo a cada uno. Probado antes de entrar a la lista.</p>
     <div class="stat-row">
-      <div class="stat"><b>85+</b><span>mods y pistas</span></div>
+      <div class="stat"><b id="statCount">—</b><span>mods y pistas</span></div>
       <div class="stat"><b>21</b><span>categorías</span></div>
       <div class="stat"><b>$0</b><span>en casi todo</span></div>
     </div>
@@ -522,6 +590,15 @@
   </div>
   <div class="cm-notice" style="border-left-color:var(--red);">
     <strong>Sobre los DLC:</strong> algunos mods reutilizan sonidos o datos de un auto de DLC oficial por debajo, sin que el creador lo avise en la página del mod (nos pasó con el Cadillac LMDh de ChemFlummi). No alcancé a verificar esto uno por uno en los 85 mods, así que si alguno no te deja jugar sin un DLC específico, probablemente lo necesite aunque no lo diga en ningún lado. Avísame cuál te da problema y lo reviso puntual.
+  </div>
+  <div class="news">
+    <h3>Novedades</h3>
+    <ul>
+      <li><span class="news-date">09 ago</span><span>Casillero para marcar mods instalados (se guarda en tu celular) y esta misma sección de novedades.</span></li>
+      <li><span class="news-date">09 ago</span><span>Toyota GR86 V2.1 (KILIN RC) agregado a JDM/Drift.</span></li>
+      <li><span class="news-date">09 ago</span><span>Formula RSS 4 agregado a Fórmulas. Se sacó la etiqueta "Sin DLC" poco confiable.</span></li>
+      <li><span class="news-date">09 ago</span><span>Buscador, modo claro/oscuro, instalar como app, botón de copiar link, íconos propios por categoría.</span></li>
+    </ul>
   </div>
   <div class="search-wrap">
     <input type="text" id="searchInput" placeholder="Buscar un mod... (ej: Ferrari, nieve, Le Mans)">
@@ -652,6 +729,7 @@ const DATA = [
    {n:"GrippedUpMods", note:"hub curado de drift/touge/JDM/street", url:"https://grippedupmods.com/downloads/collections/jdm-cars"},
    {n:"Akina, Gunsai, Sportsland Akiyama", note:"touge ficticias japonesas · en GrippedUpMods", url:"https://grippedupmods.com/downloads/collections/jdm-cars"},
    {n:"SLR Speed", note:"VDC 4.0 competición, WDT Street Spec", url:"https://slrspeed.com/collections/slr-assetto-corsa-digital-downloads-drift-the-best-tracks-cars-for-free"},
+   {n:"Toyota GR86 V2.1", note:"KILIN RC, con partes TRD y sistema VSC — revisa si el post está en el nivel gratis de su Patreon", url:"https://www.patreon.com/kilin_rc_jp/posts/gr86-v2-1-126399751"},
  ]},
  {id:"mx5", num:"BOX 06", title:"Mazda MX-5", icon:"car",
   desc:"El auto que enseñó a medio mundo a manejar en pista.",
@@ -775,6 +853,8 @@ const DATA = [
 ];
 
 const content = document.getElementById('content');
+const totalItems = DATA.reduce((sum,cat)=> sum + cat.items.filter(it=>!it.tag).length, 0);
+document.getElementById('statCount').textContent = totalItems + '+';
 DATA.forEach(cat=>{
   const sec = document.createElement('section');
   sec.className='category';
@@ -794,15 +874,16 @@ DATA.forEach(cat=>{
       </div>
     </div>
     <div class="grid">
-      ${cat.items.map(it=>{
+      ${cat.items.map((it,idx)=>{
         if(it.tag){
           return `<div class="card group-tag">${ICONS.user}<h3>${it.n}</h3><span class="note">${it.note}</span></div>`;
         }
+        const itemId = `${cat.id}-${idx}`;
         const disabled = it.disabled ? ' disabled' : '';
         const link = it.url && it.url!=="#" && !it.disabled
           ? `<a class="go" href="${it.url}" target="_blank" rel="noopener" aria-label="Ir al mod ${it.n}">Ir al mod →</a>`
           : (it.disabled ? `<span class="go" style="color:var(--ink-faint)">No disponible</span>` : `<span class="go" style="color:var(--ink-faint)">Buscar por nombre</span>`);
-        return `<div class="card${disabled}">
+        return `<div class="card${disabled}" data-item-id="${itemId}">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${CAT_ICONS[cat.id] || ''}</svg>
           <h3>${it.n}</h3>
           <div class="note">${it.note}</div>
@@ -810,6 +891,7 @@ DATA.forEach(cat=>{
             ${link}
             ${(it.url && it.url!=="#" && !it.disabled) ? `<button class="copy-btn" data-url="${it.url}" data-name="${it.n}" aria-label="Copiar link de ${it.n}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>` : ''}
           </div>
+          ${it.disabled ? '' : `<label class="installed-check"><input type="checkbox" class="installed-input" data-item-id="${itemId}"> Instalado</label>`}
         </div>`;
       }).join('')}
     </div>
@@ -855,6 +937,29 @@ themeBtn.addEventListener('click', ()=>{
   const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
   localStorage.setItem('bdm-theme', next);
   applyTheme(next);
+});
+
+/* casillero de instalado */
+const INSTALLED_KEY = 'bdm-installed';
+let installed = {};
+try { installed = JSON.parse(localStorage.getItem(INSTALLED_KEY) || '{}'); } catch(e){ installed = {}; }
+
+function pintarInstalados(){
+  document.querySelectorAll('.installed-input').forEach(chk=>{
+    const id = chk.dataset.itemId;
+    const marcado = !!installed[id];
+    chk.checked = marcado;
+    chk.closest('.card').classList.toggle('is-installed', marcado);
+  });
+}
+pintarInstalados();
+
+document.getElementById('content').addEventListener('change', (e)=>{
+  if(!e.target.classList.contains('installed-input')) return;
+  const id = e.target.dataset.itemId;
+  installed[id] = e.target.checked;
+  localStorage.setItem(INSTALLED_KEY, JSON.stringify(installed));
+  e.target.closest('.card').classList.toggle('is-installed', e.target.checked);
 });
 
 /* botón de copiar link */
